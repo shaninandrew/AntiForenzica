@@ -1,4 +1,7 @@
-﻿namespace AntiForenzica
+﻿using System;
+using System.Diagnostics;
+
+namespace AntiForenzica
 {
     public partial class FormDel : Form
     {
@@ -78,8 +81,8 @@
             for (int i = 0; i < buffer.Length; i++) buffer[i] = i % 2 == 0 ? '■' : '◘';
 
             //файл запишем длиннее
-            long N = size / buffer.Length+1;
-           
+            long N = size / buffer.Length + 1;
+
 
             FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Write);
             StreamWriter sw = new StreamWriter(fs);
@@ -91,7 +94,10 @@
             sw.DisposeAsync();
             //удалить реально
 
-            File.Delete(filename);
+            string new_name = System.IO.Path.GetDirectoryName(filename) + System.IO.Path.DirectorySeparatorChar + "193292892";
+
+            File.Move(filename, new_name);
+            File.Delete(new_name);
 
         }
 
@@ -119,140 +125,240 @@
         private async void PushSpace_Click(object sender, EventArgs e)
         {
             PushSpace.Enabled = false;
-            PushSpace.BackColor= Color.Red;
+            PushSpace.BackColor = Color.Red;
             string msg = PushSpace.Text;
-            
 
-            
 
 
             string filename = "push.dat";
 
             System.IO.DriveInfo[] di = DriveInfo.GetDrives();
 
+            int Runned = 0;
+
             foreach (DriveInfo d in di.AsParallel())
             {
-                if ((d.DriveType==DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType==DriveType.Network)) continue;
+                if ((d.DriveType == DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network)) continue;
 
-                    long Mosaic = 10000;
-                    long M_S = d.TotalFreeSpace / Mosaic-1;
+                Task t = new Task(() =>
+                {
 
-                    PushSpace.Text = "Подготовка для " +d.Name;
-                    PushSpace.Refresh();
-                    string DAT = "";
-                    byte[] DX  =  new  byte[M_S];
-                    for (int i = 0; i < M_S; i++)
+                Form f = new Form();
+                TextBox txt = new TextBox();
+                txt.Multiline = true;
+                txt.Parent = f;
+                txt.Dock = DockStyle.Fill;
+                
+                f.Top = 100*(Runned+1);
+                f.Width = 700;
+                f.FormBorderStyle = FormBorderStyle.None;
+                f.Show();
+                f.TopMost = true;
+
+
+                DriveInfo DATA_DISK = d;
+                string disk = DATA_DISK.Name;
+                 f.Text = disk;
+
+                long Mosaic = DATA_DISK.TotalFreeSpace / 4096 - 1; ;
+                long M_S = DATA_DISK.TotalFreeSpace / Mosaic - 1;
+
+
+               
+                txt.Text = "Подготовка для " + disk;
+                txt.Refresh();
+                
+                string DAT = "";
+                byte[] DX = new byte[M_S];
+                for (int i = 0; i < M_S; i++)
+                {
+                    DX[i] = (byte)((254 + i) % 255);
+                }
+                DAT = System.Text.Encoding.Default.GetString(DX);
+
+
+                bool BREAK_PROCESS = false;
+                string[] file_names = new string[Mosaic+1];
+
+                
+                if (disk == "Z:\\")
                     {
-                        DX[i] =  (byte) ( (254 + i)% 255 );
+                        //for debug obly
+                        int x = 0;
                     }
-                    DAT = System.Text.Encoding.Default.GetString(DX);
+
+                List <string> done_files= new System.Collections.Generic.List<string>();
+                done_files.Clear();
+
+                //создаем массив
+                for (long j = 0; j < Mosaic; j++)
+                {
+                    file_names[j] = disk + j + ".xxx-" + j + "";
+                }
+
+                for (long j = 0; j < Mosaic; j++)
+                {
+
+                        if (j % 100 == 1)
+                        {
+                            txt.Text = "Загрузка на " + DATA_DISK.Name + " " + DATA_DISK.AvailableFreeSpace / 1000000 + " MB  / Потоков " + Runned.ToString() + " / " + ((int)((double)j * 100 / Mosaic)).ToString() + "%";
+                            txt.Refresh();
+                            if (j%200==1) f.Refresh();
 
 
-                    for (int j = 0; j < Mosaic; j++)
-                    {
+                            if (DATA_DISK.AvailableFreeSpace < 5024)
+                            { BREAK_PROCESS = true; }
+                        }
+
+
+
+                        if (BREAK_PROCESS) break;
+
+                        long index = (long)j + 0;
+
                         try
                         {
-                            string tmp_filename2 = d.Name + j + ".xxx-"+j+".dat";
-                            await System.IO.File.WriteAllTextAsync(tmp_filename2, DAT);
+                               
+                            string tmp_filename2 = file_names[index];
 
-                            if (j % 50 == 1)
+                            // if (File.Exists(tmp_filename2))
+                            //     try { System.IO.File.SetAttributes(tmp_filename2, FileAttributes.Normal); } catch { }
+
+                            if (!File.Exists(tmp_filename2))
                             {
-                                PushSpace.Text = d.Name + " " + d.AvailableFreeSpace / 1000000 + " MB";
-                                PushSpace.Refresh();
-                                this.Refresh();
+                                try
+                                {
+                                    System.IO.File.WriteAllText(tmp_filename2, DAT);
+                                //     try { System.IO.File.SetAttributes(tmp_filename2, FileAttributes.Hidden); } catch { }
+                                    done_files.Add(tmp_filename2);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine(ex.Message);
+                                    
+                                    if (DATA_DISK.AvailableFreeSpace < 5024)
+                                    { BREAK_PROCESS = true; }
+
+                                    if (ex.Message.ToLower().IndexOf("access to the path") > -1)
+                                    { 
+                                        BREAK_PROCESS = true; 
+                                    
+                                    }
+                                }
                             }
-
-
-                    }
-                    catch
-                        { break;  }
-
-                    }
-
-
-                    for (int j = 0; j < Mosaic; j++)
-                    {
-                    try
-                    {
-                        string tmp_filename2 = d.Name + j + ".xxx-" + j + ".dat";
-                        System.IO.File.Delete(tmp_filename2);
-
-
-                    }
-                    catch
-                    { break; }
-                    finally
-                    {
-                        if (j % 50 == 1)
-                        {
-                            PushSpace.Text = d.Name + " " + d.AvailableFreeSpace / 1000000 + " MB";
-                            PushSpace.Refresh();
                         }
-
-                    }
-
-                    }
-
-
-                    /*
-
-                long size = d.AvailableFreeSpace;
-                    string tmp_filename = d.Name + filename;
-
-                    char[] buffer = new char[1000000];        //1000 кб
-                                                              //заполняем 111111110
-                    for (int i = 0; i < buffer.Length; i++) buffer[i] = i % 2 == 0 ? '■' : '◘';
-
-                    //файл запишем длиннее
-                    long N = size / buffer.Length-1;
-                    
-
-                    StreamWriter sw = null;
-
-
-                    try
-                    {
-                        FileStream fs = new FileStream(tmp_filename, FileMode.OpenOrCreate, FileAccess.Write);
-                        sw = new StreamWriter(fs);
-
-
-                        for (int i = 0; i < N; i++)
-                            try
-                            {
-                                sw.Write(buffer);
-
-                            }
-                            catch { }
-                    }
-
-                    catch
-                    {
-
-                    }
-                    finally
-                    {
-
-                        
-                        if (sw != null)
+                        catch (Exception e)
                         {
-                            try { sw.Close(); } catch { }
-                            try { sw.DisposeAsync(); } catch { }
+                            if (e.Message.ToLower().IndexOf("access to the path") > -1)
+                            { BREAK_PROCESS = true; }
+
+
                         }
-                    }
-              
-              
+                        finally
+                        {
+                          
 
-                for (int i = 0; i<5;i++)
-                    try
-                    {
-                            Thread.Sleep(100);
-                            File.Delete(tmp_filename);
-                    }
-                    catch { }
+                        }
+                } //for
 
-                               */
+
                 
-            }       // foreach
+                int errors = 0;
+                Runned=0;
+
+                int ji = -1;
+                foreach (string fn in done_files)
+                {
+
+                        ji++;
+
+                        if (ji % 100 == 1)
+                        {
+                            txt.Text = "Разгрузка на " + DATA_DISK.Name + " " + DATA_DISK.AvailableFreeSpace / 1000000 + " MB  / Потоков " + Runned.ToString() + " / " + ((int)((double)ji * 100 / Mosaic)).ToString() + "%";
+                            txt.Refresh();
+                            if (ji % 200 == 1) f.Refresh();
+                        }
+                            
+
+                        try
+                        {
+
+                            string tmp_filename2 = fn + "";
+                            
+
+
+                            if (System.IO.File.Exists(tmp_filename2))
+                            {
+
+                                //    try { System.IO.File.SetAttributes(tmp_filename2, FileAttributes.Normal); } catch { }
+
+                                try
+                                {
+
+                                    System.IO.File.Delete(tmp_filename2);
+                                    errors = 0;
+                                }
+                                catch { errors++; };
+
+
+                            }
+                            else
+                            {
+                                errors++;
+                            }
+
+                            //не ломай комедию
+                            /*if (errors > 10)
+                            {
+                                BREAK_PROCESS = true;
+                            }     */
+
+                        }
+                        catch (Exception e)
+                        {
+                            if (e.Message.ToLower().IndexOf("access to the path") > -1)
+                            { BREAK_PROCESS = true; }
+
+                        }
+                        finally
+                        {
+
+
+                            if (!BREAK_PROCESS)
+                            {
+
+                            }
+
+                        }
+
+                }
+
+
+
+                Runned = Runned - 1;
+                txt.Dispose();
+                f.Dispose();
+            });
+
+                Runned++;
+                t.Start();
+
+                while (Runned > 0)
+                {
+                    lock (PushSpace)
+                    {
+                        PushSpace.Text = " Ждем очистку " + d.Name + " " + d.AvailableFreeSpace / 1000000 + " MB  / Потоков " + Runned.ToString();
+                        PushSpace.Refresh();
+                    }
+                    Thread.Sleep(1000);
+
+                }
+
+
+            }   // foreach
+
+
+          
 
             PushSpace.Text = msg;
             PushSpace.BackColor = SystemColors.ButtonFace;

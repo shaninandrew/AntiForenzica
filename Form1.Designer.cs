@@ -117,7 +117,6 @@
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "FormDel";
             Text = "Программный шредер";
-            TopMost = true;
             ResumeLayout(false);
             PerformLayout();
         }
