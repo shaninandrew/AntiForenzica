@@ -135,11 +135,12 @@ namespace AntiForenzica
             System.IO.DriveInfo[] di = DriveInfo.GetDrives();
 
             int Runned = 0;
-
+            int h = 0;
             foreach (DriveInfo d in di.AsParallel())
             {
                 if ((d.DriveType == DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network)) continue;
 
+                h++;
                 Task t = new Task(() =>
                 {
 
@@ -149,7 +150,7 @@ namespace AntiForenzica
                 txt.Parent = f;
                 txt.Dock = DockStyle.Fill;
                 
-                f.Top = 100*(Runned+1);
+                f.Top = (f.Height)*(h+1)+5;
                 f.Width = 700;
                 f.FormBorderStyle = FormBorderStyle.None;
                 f.Show();
