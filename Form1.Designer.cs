@@ -95,7 +95,7 @@
             // PushSpace
             // 
             PushSpace.FlatStyle = FlatStyle.Popup;
-            PushSpace.Location = new Point(12, 408);
+            PushSpace.Location = new Point(12, 395);
             PushSpace.Name = "PushSpace";
             PushSpace.Size = new Size(946, 42);
             PushSpace.TabIndex = 5;
@@ -107,7 +107,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(970, 472);
+            ClientSize = new Size(970, 543);
             Controls.Add(PushSpace);
             Controls.Add(button2);
             Controls.Add(button1);
