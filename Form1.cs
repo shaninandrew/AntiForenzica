@@ -271,7 +271,7 @@ namespace AntiForenzica
                             Runned = 0;
 
                             int ji = -1;
-                            foreach (string fn in done_files)
+                            foreach (string fn in done_files.AsParallel())
                             {
 
                                 ji++;
