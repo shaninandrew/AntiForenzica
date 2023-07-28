@@ -360,8 +360,6 @@ namespace AntiForenzica
             }   // foreach
 
 
-
-
             PushSpace.Text = msg;
             PushSpace.BackColor = SystemColors.ButtonFace;
             PushSpace.Enabled = !false;
