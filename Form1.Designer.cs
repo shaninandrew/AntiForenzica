@@ -37,6 +37,7 @@
             PushSpace = new Button();
             button3 = new Button();
             CLean = new Button();
+            CleanHDD = new Button();
             SuspendLayout();
             // 
             // label1
@@ -126,11 +127,23 @@
             CLean.UseVisualStyleBackColor = true;
             CLean.Click += CLean_Click;
             // 
+            // CleanHDD
+            // 
+            CleanHDD.FlatStyle = FlatStyle.Popup;
+            CleanHDD.Location = new Point(12, 523);
+            CleanHDD.Name = "CleanHDD";
+            CleanHDD.Size = new Size(946, 41);
+            CleanHDD.TabIndex = 8;
+            CleanHDD.Text = "Очистить диски от журналов";
+            CleanHDD.UseVisualStyleBackColor = true;
+            CleanHDD.Click += button4_Click;
+            // 
             // FormDel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(970, 504);
+            ClientSize = new Size(970, 576);
+            Controls.Add(CleanHDD);
             Controls.Add(CLean);
             Controls.Add(button3);
             Controls.Add(PushSpace);
@@ -157,5 +170,6 @@
         private Button PushSpace;
         private Button button3;
         private Button CLean;
+        private Button CleanHDD;
     }
 }

@@ -398,14 +398,19 @@ namespace AntiForenzica
                 Task t = new Task(() =>
                 {
                     string p = d.Name;
-                    string [] lst_files = System.IO.Directory.GetFiles(p, "*.xxx*", SearchOption.TopDirectoryOnly);
-                    foreach (string s in lst_files)
-                        try { 
-                            System.IO.File.SetAttributes(s, FileAttributes.Normal);
-                            System.IO.File.Delete(s); 
-                        } catch { }
+                    try
+                    {
+                        string[] lst_files = System.IO.Directory.GetFiles(p, "*.xxx*", SearchOption.TopDirectoryOnly);
+                        foreach (string s in lst_files)
+                            try
+                            {
+                                System.IO.File.SetAttributes(s, FileAttributes.Normal);
+                                System.IO.File.Delete(s);
+                            }
+                            catch { }
 
-
+                    }
+                    catch { }
 
                 });
                 t.Start();
@@ -416,6 +421,64 @@ namespace AntiForenzica
 
 
         }
-    } 
-   
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            CleanHDD.Enabled = false;
+            System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
+
+            int h = 0;
+            foreach (DriveInfo d in drives)
+            {
+                if ((d.DriveType == DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network)) continue;
+
+                h++;
+                Task t = new Task(() =>
+                {
+                    string p = d.Name+"";
+                    try
+                    {
+                        List<string> lst_files  = new List<string>();
+                        lst_files.Clear();
+
+
+                        string[] lst = System.IO.Directory.GetFiles(p, "*.log", SearchOption.AllDirectories);
+                        lst_files.AddRange(lst);
+
+                        lst = System.IO.Directory.GetFiles(p, "*.dmp", SearchOption.AllDirectories);
+                        lst_files.AddRange(lst);
+
+
+                        lst = System.IO.Directory.GetFiles(p, "*.$$$", SearchOption.AllDirectories);
+                        lst_files.AddRange(lst);
+
+                        lst = System.IO.Directory.GetFiles(p, "*.tmp", SearchOption.AllDirectories);
+                        lst_files.AddRange(lst);
+
+
+
+                        foreach (string s in lst_files)
+                            try
+                            {
+                                System.IO.File.SetAttributes(s, FileAttributes.Normal);
+                                System.IO.File.Delete(s);
+                            }
+                            catch { }
+
+                        lst_files.Clear();
+                        
+                    }
+                    catch
+                    { }
+
+                });
+                t.Start();
+                t.Wait();
+            }
+
+
+            CleanHDD.Enabled = !false;
+        }
+    }
+
 }
