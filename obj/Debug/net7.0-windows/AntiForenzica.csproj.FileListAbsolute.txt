@@ -36,3 +36,4 @@ C:\Users\hedge\AntiForenzica\obj\Debug\net7.0-windows\AntiForenzica.xml
 C:\Users\hedge\AntiForenzica\obj\Debug\net7.0-windows\AntiForenzica.pdb
 C:\Users\hedge\AntiForenzica\obj\Debug\net7.0-windows\AntiForenzica.genruntimeconfig.cache
 C:\Users\hedge\AntiForenzica\obj\Debug\net7.0-windows\ref\AntiForenzica.dll
+C:\Users\hedge\AntiForenzica\bin\Debug\net7.0-windows\AntiForenzica.dll.config

@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\проекты\\АнтиФорензика\\AntiForenzica\\AntiForenzica.csproj": {}
+    "C:\\Users\\hedge\\AntiForenzica\\AntiForenzica.csproj": {}
   },
   "projects": {
-    "C:\\проекты\\АнтиФорензика\\AntiForenzica\\AntiForenzica.csproj": {
+    "C:\\Users\\hedge\\AntiForenzica\\AntiForenzica.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\проекты\\АнтиФорензика\\AntiForenzica\\AntiForenzica.csproj",
+        "projectUniqueName": "C:\\Users\\hedge\\AntiForenzica\\AntiForenzica.csproj",
         "projectName": "AntiForenzica",
-        "projectPath": "C:\\проекты\\АнтиФорензика\\AntiForenzica\\AntiForenzica.csproj",
-        "packagesPath": "C:\\Users\\Шанин\\.nuget\\packages\\",
-        "outputPath": "C:\\проекты\\АнтиФорензика\\AntiForenzica\\obj\\",
+        "projectPath": "C:\\Users\\hedge\\AntiForenzica\\AntiForenzica.csproj",
+        "packagesPath": "C:\\Users\\hedge\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hedge\\AntiForenzica\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Шанин\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\hedge\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

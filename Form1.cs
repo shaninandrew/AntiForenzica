@@ -383,5 +383,39 @@ namespace AntiForenzica
             FileLst.Items.Remove(FileLst.SelectedItem);
 
         }
-    }
+
+        private void CLean_Click(object sender, EventArgs e)
+        {
+            CLean.Enabled = false;
+            System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
+
+            int h = 0;
+            foreach (DriveInfo d in drives.AsParallel())
+            {
+                if ((d.DriveType == DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network)) continue;
+
+                h++;
+                Task t = new Task(() =>
+                {
+                    string p = d.Name;
+                    string [] lst_files = System.IO.Directory.GetFiles(p, "*.xxx*", SearchOption.TopDirectoryOnly);
+                    foreach (string s in lst_files)
+                        try { 
+                            System.IO.File.SetAttributes(s, FileAttributes.Normal);
+                            System.IO.File.Delete(s); 
+                        } catch { }
+
+
+
+                });
+                t.Start();
+            }
+
+
+            CLean.Enabled = !false;
+
+
+        }
+    } 
+   
 }

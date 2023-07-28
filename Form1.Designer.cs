@@ -36,6 +36,7 @@
             button2 = new Button();
             PushSpace = new Button();
             button3 = new Button();
+            CLean = new Button();
             SuspendLayout();
             // 
             // label1
@@ -85,9 +86,9 @@
             // 
             // button2
             // 
-            button2.Location = new Point(887, 14);
+            button2.Location = new Point(867, 12);
             button2.Name = "button2";
-            button2.Size = new Size(71, 24);
+            button2.Size = new Size(91, 26);
             button2.TabIndex = 4;
             button2.Text = "+Папка";
             button2.UseVisualStyleBackColor = true;
@@ -106,19 +107,31 @@
             // 
             // button3
             // 
-            button3.Location = new Point(676, 15);
+            button3.Location = new Point(676, 12);
             button3.Name = "button3";
-            button3.Size = new Size(132, 23);
+            button3.Size = new Size(166, 26);
             button3.TabIndex = 6;
             button3.Text = "Убрать из списка";
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
+            // CLean
+            // 
+            CLean.FlatStyle = FlatStyle.Popup;
+            CLean.Location = new Point(12, 443);
+            CLean.Name = "CLean";
+            CLean.Size = new Size(946, 41);
+            CLean.TabIndex = 7;
+            CLean.Text = "Очистить диски от следов пуша";
+            CLean.UseVisualStyleBackColor = true;
+            CLean.Click += CLean_Click;
+            // 
             // FormDel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(970, 457);
+            ClientSize = new Size(970, 504);
+            Controls.Add(CLean);
             Controls.Add(button3);
             Controls.Add(PushSpace);
             Controls.Add(button2);
@@ -143,5 +156,6 @@
         private Button button2;
         private Button PushSpace;
         private Button button3;
+        private Button CLean;
     }
 }
