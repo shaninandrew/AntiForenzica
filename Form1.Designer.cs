@@ -35,6 +35,7 @@
             folderBrowserDialog1 = new FolderBrowserDialog();
             button2 = new Button();
             PushSpace = new Button();
+            button3 = new Button();
             SuspendLayout();
             // 
             // label1
@@ -103,11 +104,22 @@
             PushSpace.UseVisualStyleBackColor = true;
             PushSpace.Click += PushSpace_Click;
             // 
+            // button3
+            // 
+            button3.Location = new Point(676, 15);
+            button3.Name = "button3";
+            button3.Size = new Size(132, 23);
+            button3.TabIndex = 6;
+            button3.Text = "Убрать из списка";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
             // FormDel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(970, 543);
+            ClientSize = new Size(970, 457);
+            Controls.Add(button3);
             Controls.Add(PushSpace);
             Controls.Add(button2);
             Controls.Add(button1);
@@ -130,5 +142,6 @@
         private FolderBrowserDialog folderBrowserDialog1;
         private Button button2;
         private Button PushSpace;
+        private Button button3;
     }
 }

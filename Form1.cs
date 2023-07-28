@@ -83,22 +83,33 @@ namespace AntiForenzica
             //файл запишем длиннее
             long N = size / buffer.Length + 1;
 
+            try
+            {
+                FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs);
+                for (int i = 0; i < N; i++)
+                { sw.Write(buffer); }
 
-            FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Write);
-            StreamWriter sw = new StreamWriter(fs);
-            for (int i = 0; i < N; i++)
-            { sw.Write(buffer); }
 
-
-            sw.Close();
-            sw.DisposeAsync();
+                sw.Close();
+                sw.DisposeAsync();
+            }
+            catch { }
             //удалить реально
 
-            string new_name = System.IO.Path.GetDirectoryName(filename) + System.IO.Path.DirectorySeparatorChar + "193292892";
+            try
+            {
+                string new_name = System.IO.Path.GetDirectoryName(filename) + System.IO.Path.DirectorySeparatorChar + "193292892";
 
-            File.Move(filename, new_name);
-            File.Delete(new_name);
+                File.Move(filename, new_name);
+                File.Delete(new_name);
 
+            }
+            catch
+            {
+
+                File.Delete(filename);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -107,7 +118,7 @@ namespace AntiForenzica
             {
                 DirectoryInfo di = new DirectoryInfo(folderBrowserDialog1.SelectedPath);
 
-                foreach (FileInfo f in di.GetFiles("*.*"))
+                foreach (FileInfo f in di.GetFiles("*.*", SearchOption.AllDirectories))
                 {
                     string s = f.FullName;
                     FileLst.Items.Add(s);
@@ -150,7 +161,7 @@ namespace AntiForenzica
                     txt.Multiline = true;
                     txt.Parent = f;
                     txt.Dock = DockStyle.Fill;
-                    
+
                     f.Height = 100;
 
                     f.Top = (f.Height) * (h + 1) + 5;
@@ -197,7 +208,7 @@ namespace AntiForenzica
                     //создаем массив
                     for (long j = 0; j < Mosaic; j++)
                     {
-                        file_names[j] = disk + j.ToString().PadLeft(9,'0') + ".xxx-" + j.ToString().PadLeft(9, '0') + "";
+                        file_names[j] = disk + j.ToString().PadLeft(9, '0') + ".xxx-" + j.ToString().PadLeft(9, '0') + "";
                     }
 
                     for (long j = 0; j < Mosaic; j++)
@@ -220,126 +231,126 @@ namespace AntiForenzica
 
                         long index = (long)j + 0;
 
-                            try
+                        try
+                        {
+
+                            string tmp_filename2 = file_names[index];
+
+                            if (File.Exists(tmp_filename2))
+                                try { System.IO.File.SetAttributes(tmp_filename2, FileAttributes.Hidden); } catch { }
+
+                            if (!File.Exists(tmp_filename2))
                             {
-
-                                string tmp_filename2 = file_names[index];
-
-                                if (File.Exists(tmp_filename2))
+                                try
+                                {
+                                    System.IO.File.WriteAllText(tmp_filename2, DAT);
                                     try { System.IO.File.SetAttributes(tmp_filename2, FileAttributes.Hidden); } catch { }
-
-                                if (!File.Exists(tmp_filename2))
+                                    done_files.Add(tmp_filename2);
+                                }
+                                catch (Exception ex)
                                 {
-                                    try
+                                    Debug.WriteLine(ex.Message);
+
+                                    if (DATA_DISK.AvailableFreeSpace < 5024)
+                                    { BREAK_PROCESS = true; }
+
+                                    if (ex.Message.ToLower().IndexOf("access to the path") > -1)
                                     {
-                                        System.IO.File.WriteAllText(tmp_filename2, DAT);
-                                        try { System.IO.File.SetAttributes(tmp_filename2, FileAttributes.Hidden); } catch { }
-                                        done_files.Add(tmp_filename2);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Debug.WriteLine(ex.Message);
+                                        BREAK_PROCESS = true;
 
-                                        if (DATA_DISK.AvailableFreeSpace < 5024)
-                                        { BREAK_PROCESS = true; }
-
-                                        if (ex.Message.ToLower().IndexOf("access to the path") > -1)
-                                        {
-                                            BREAK_PROCESS = true;
-
-                                        }
                                     }
                                 }
                             }
-                            catch (Exception e)
+                        }
+                        catch (Exception e)
+                        {
+                            if (e.Message.ToLower().IndexOf("access to the path") > -1)
+                            { BREAK_PROCESS = true; }
+
+
+                        }
+                        finally
+                        {
+
+
+                        }
+                    } //for
+
+
+
+                    int errors = 0;
+                    Runned = 0;
+
+                    int ji = -1;
+                    foreach (string fn in done_files.AsParallel())
+                    {
+
+                        ji++;
+
+                        if (ji % 100 == 1)
+                        {
+                            txt.Text = "Разгрузка на " + DATA_DISK.Name + " " + DATA_DISK.AvailableFreeSpace / 1000000 + " MB  / Потоков " + Runned.ToString() + " / " + ((int)((double)ji * 100 / Mosaic)).ToString() + "%";
+                            txt.Refresh();
+                            if (ji % 200 == 1) f.Refresh();
+                        }
+
+
+                        try
+                        {
+
+                            string tmp_filename2 = fn + "";
+
+
+
+                            if (System.IO.File.Exists(tmp_filename2))
                             {
-                                if (e.Message.ToLower().IndexOf("access to the path") > -1)
-                                { BREAK_PROCESS = true; }
 
-
-                            }
-                            finally
-                            {
-
-
-                            }
-                        } //for
-
-
-
-                            int errors = 0;
-                            Runned = 0;
-
-                            int ji = -1;
-                            foreach (string fn in done_files.AsParallel())
-                            {
-
-                                ji++;
-
-                                if (ji % 100 == 1)
-                                {
-                                    txt.Text = "Разгрузка на " + DATA_DISK.Name + " " + DATA_DISK.AvailableFreeSpace / 1000000 + " MB  / Потоков " + Runned.ToString() + " / " + ((int)((double)ji * 100 / Mosaic)).ToString() + "%";
-                                    txt.Refresh();
-                                    if (ji % 200 == 1) f.Refresh();
-                                }
-
+                                try { System.IO.File.SetAttributes(tmp_filename2, FileAttributes.Normal); } catch { }
 
                                 try
                                 {
 
-                                    string tmp_filename2 = fn + "";
-
-
-
-                                    if (System.IO.File.Exists(tmp_filename2))
-                                    {
-
-                                        try { System.IO.File.SetAttributes(tmp_filename2, FileAttributes.Normal); } catch { }
-
-                                        try
-                                        {
-
-                                            System.IO.File.Delete(tmp_filename2);
-                                            errors = 0;
-                                        }
-                                        catch { errors++; };
-
-
-                                    }
-                                    else
-                                    {
-                                        errors++;
-                                    }
-
-                                    //не ломай комедию
-                                    /*if (errors > 10)
-                                    {
-                                        BREAK_PROCESS = true;
-                                    }     */
-
+                                    System.IO.File.Delete(tmp_filename2);
+                                    errors = 0;
                                 }
-                                catch (Exception e)
-                                {
-                                    if (e.Message.ToLower().IndexOf("access to the path") > -1)
-                                    { BREAK_PROCESS = true; }
-
-                                }
-                                finally
-                                {
+                                catch { errors++; };
 
 
-                                    if (!BREAK_PROCESS)
-                                    {
+                            }
+                            else
+                            {
+                                errors++;
+                            }
 
-                                    }
+                            //не ломай комедию
+                            /*if (errors > 10)
+                            {
+                                BREAK_PROCESS = true;
+                            }     */
 
-                                }
+                        }
+                        catch (Exception e)
+                        {
+                            if (e.Message.ToLower().IndexOf("access to the path") > -1)
+                            { BREAK_PROCESS = true; }
+
+                        }
+                        finally
+                        {
+
+
+                            if (!BREAK_PROCESS)
+                            {
 
                             }
 
-                            Runned = Runned - 1;
-                            txt.Dispose();
-                            f.Dispose();
+                        }
+
+                    }
+
+                    Runned = Runned - 1;
+                    txt.Dispose();
+                    f.Dispose();
                 });
 
                 Runned++;
@@ -363,6 +374,14 @@ namespace AntiForenzica
             PushSpace.Text = msg;
             PushSpace.BackColor = SystemColors.ButtonFace;
             PushSpace.Enabled = !false;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+
+            FileLst.Items.Remove(FileLst.SelectedItem);
+
         }
     }
 }
