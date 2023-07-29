@@ -428,7 +428,7 @@ namespace AntiForenzica
             System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
 
             int h = 0;
-            foreach (DriveInfo d in drives)
+            foreach (DriveInfo d in drives.AsParallel())
             {
                 if ((d.DriveType == DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network)) continue;
 
@@ -442,9 +442,14 @@ namespace AntiForenzica
                         lst_files.Clear();
 
 
-                        string[] lst = System.IO.Directory.GetFiles(p, "*.log", SearchOption.AllDirectories);
-                        lst_files.AddRange(lst);
+                        string[] lst = System.IO.Directory.GetFiles(p, "*.*", SearchOption.AllDirectories);
+                        lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".tmp")));
+                        lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".$$$")));
+                        lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".dmp")));
+                        lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".log")));
 
+
+                        /*
                         lst = System.IO.Directory.GetFiles(p, "*.dmp", SearchOption.AllDirectories);
                         lst_files.AddRange(lst);
 
@@ -455,7 +460,7 @@ namespace AntiForenzica
                         lst = System.IO.Directory.GetFiles(p, "*.tmp", SearchOption.AllDirectories);
                         lst_files.AddRange(lst);
 
-
+                          */
 
                         foreach (string s in lst_files)
                             try
