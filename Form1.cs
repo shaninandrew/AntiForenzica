@@ -508,7 +508,8 @@ namespace AntiForenzica
                                    {
                                       
                                        System.IO.File.SetAttributes(s, FileAttributes.Normal);
-                                       System.IO.File.Delete(s);
+                                       //журналы удаляются безопасно
+                                       DeleteSecure(s);
                                    }
                                    catch { }
                                    finally { }
