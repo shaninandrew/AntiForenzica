@@ -387,6 +387,8 @@ namespace AntiForenzica
         private void CLean_Click(object sender, EventArgs e)
         {
             CLean.Enabled = false;
+            CLean
+                .BackColor = Color.DarkMagenta;
             System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
 
             int h = 0;
@@ -394,13 +396,14 @@ namespace AntiForenzica
             {
                 if ((d.DriveType == DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network)) continue;
 
-                h++;
                 Task t = new Task(() =>
                 {
                     string p = d.Name;
                     try
                     {
                         string[] lst_files = System.IO.Directory.GetFiles(p, "*.xxx*", SearchOption.TopDirectoryOnly);
+
+                        h++;
                         foreach (string s in lst_files)
                             try
                             {
@@ -410,14 +413,22 @@ namespace AntiForenzica
                             catch { }
 
                     }
-                    catch { }
+                    catch {  }
 
                 });
                 t.Start();
+
+                t.ContinueWith(async (t) =>
+                {
+                    h--;
+                    if (h <= 0) { CLean.Enabled = !false; CLean.BackColor = SystemColors.ButtonFace; }
+                });
             }
 
 
-            CLean.Enabled = !false;
+
+
+           
 
 
         }
@@ -425,6 +436,7 @@ namespace AntiForenzica
         private void button4_Click(object sender, EventArgs e)
         {
             CleanHDD.Enabled = false;
+            CleanHDD.BackColor = Color.Cyan;
             System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
 
             int h = 0;
@@ -475,12 +487,19 @@ namespace AntiForenzica
                     { }
 
                 });
+
                 t.Start();
-               // t.Wait();
+                t.ContinueWith(async (t) =>
+                {
+                    h--;
+                    if (h <= 0) { CleanHDD.Enabled = !false;  CleanHDD.BackColor = SystemColors.ButtonFace; }
+                });
+
             }
 
 
-            CleanHDD.Enabled = !false;
+           
+            
         }
     }
 
