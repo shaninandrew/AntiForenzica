@@ -470,7 +470,9 @@ namespace AntiForenzica
             foreach (DriveInfo d in drives)
             {
                 if ((d.DriveType == DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network)) continue;
-                
+
+                List<string> lst_files = new List<string>();
+                lst_files.Clear();
 
                 Task t = new Task(async () =>
                 {
@@ -478,8 +480,7 @@ namespace AntiForenzica
                     string p = d.Name + "";
                     try
                     {
-                        List<string> lst_files = new List<string>();
-                        lst_files.Clear();
+                       
                        
                           h++;
                         foreach (string dirs in System.IO.Directory.GetDirectories(p, "*.*", SearchOption.TopDirectoryOnly))
@@ -513,7 +514,7 @@ namespace AntiForenzica
                                    finally { }
                                }).Start();
 
-                        lst_files.Clear();
+                        
 
                     }
                     catch
@@ -528,6 +529,7 @@ namespace AntiForenzica
                     if (h <= 0) 
                     {
                         Cleaner_logs = !true;
+                        lst_files.Clear();
                     }
                 });
                 t.Start();
