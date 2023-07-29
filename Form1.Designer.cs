@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             label1 = new Label();
             FileLst = new ListBox();
             label2 = new Label();
@@ -38,6 +39,7 @@
             button3 = new Button();
             CLean = new Button();
             CleanHDD = new Button();
+            timer1 = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // label1
@@ -138,6 +140,10 @@
             CleanHDD.UseVisualStyleBackColor = true;
             CleanHDD.Click += button4_Click;
             // 
+            // timer1
+            // 
+            timer1.Tick += timer1_Tick;
+            // 
             // FormDel
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -171,5 +177,6 @@
         private Button button3;
         private Button CLean;
         private Button CleanHDD;
+        private System.Windows.Forms.Timer timer1;
     }
 }
