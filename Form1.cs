@@ -428,7 +428,7 @@ namespace AntiForenzica
             System.IO.DriveInfo[] drives = System.IO.DriveInfo.GetDrives();
 
             int h = 0;
-            foreach (DriveInfo d in drives.AsParallel())
+            foreach (DriveInfo d in drives)
             {
                 if ((d.DriveType == DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network)) continue;
 
@@ -438,29 +438,27 @@ namespace AntiForenzica
                     string p = d.Name+"";
                     try
                     {
-                        List<string> lst_files  = new List<string>();
+                        List<string> lst_files = new List<string>();
                         lst_files.Clear();
 
 
-                        string[] lst = System.IO.Directory.GetFiles(p, "*.*", SearchOption.AllDirectories);
-                        lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".tmp")));
-                        lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".$$$")));
-                        lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".dmp")));
-                        lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".log")));
+                        foreach (string dirs in System.IO.Directory.GetDirectories (p, "*.*", SearchOption.TopDirectoryOnly))
+                        {
 
+                            try
+                            {
+                                string[] lst = System.IO.Directory.GetFiles(dirs, "*.*", SearchOption.AllDirectories);
 
-                        /*
-                        lst = System.IO.Directory.GetFiles(p, "*.dmp", SearchOption.AllDirectories);
-                        lst_files.AddRange(lst);
+                                lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".tmp")));
+                                lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".$$$")));
+                                lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".dmp")));
+                                lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".log")));
+                            }
+                            catch { }
 
+                        }
 
-                        lst = System.IO.Directory.GetFiles(p, "*.$$$", SearchOption.AllDirectories);
-                        lst_files.AddRange(lst);
-
-                        lst = System.IO.Directory.GetFiles(p, "*.tmp", SearchOption.AllDirectories);
-                        lst_files.AddRange(lst);
-
-                          */
+                       
 
                         foreach (string s in lst_files)
                             try
@@ -478,7 +476,7 @@ namespace AntiForenzica
 
                 });
                 t.Start();
-                t.Wait();
+               // t.Wait();
             }
 
 
