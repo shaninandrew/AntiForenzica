@@ -115,7 +115,14 @@ namespace AntiForenzica
 
             try
             {
-                string new_name = System.IO.Path.GetDirectoryName(filename) + System.IO.Path.DirectorySeparatorChar + "193292892_" + System.IO.Path.GetTempFileName() + ".xxx-1";
+                Random r = new Random();
+
+                r.Next(2020);
+                r.Next(123230);
+                long j=r.NextInt64(1,100000);
+                string new_name = System.IO.Path.GetDirectoryName(filename) + System.IO.Path.DirectorySeparatorChar + j.ToString().PadLeft(9, '0') + ".xxx-" + j.ToString().PadLeft(9, '0') + "";
+
+
                 //Переименование файла в однотипное имя
                 File.Move(filename, new_name);
                 //удаление файла
