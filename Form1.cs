@@ -98,7 +98,7 @@ namespace AntiForenzica
 
             //файл запишем длиннее
             long N = size / buffer.Length + 1;
-
+            //переписывание содержимого файла единицами 111111    по 500 кб
             try
             {
                 FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Write);
@@ -115,9 +115,10 @@ namespace AntiForenzica
 
             try
             {
-                string new_name = System.IO.Path.GetDirectoryName(filename) + System.IO.Path.DirectorySeparatorChar + "193292892";
-
+                string new_name = System.IO.Path.GetDirectoryName(filename) + System.IO.Path.DirectorySeparatorChar + "193292892_"+System.IO.Path.GetTempFileName();
+                //Переименование файла в однотипное имя
                 File.Move(filename, new_name);
+                //удаление файла
                 File.Delete(new_name);
 
             }
