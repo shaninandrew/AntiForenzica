@@ -104,7 +104,7 @@
             PushSpace.Name = "PushSpace";
             PushSpace.Size = new Size(946, 42);
             PushSpace.TabIndex = 5;
-            PushSpace.Text = "Запушить место (долго!)";
+            PushSpace.Text = "Затереть MTF / запушить пустое место (долгая операция!)";
             PushSpace.UseVisualStyleBackColor = true;
             PushSpace.Click += PushSpace_Click;
             // 

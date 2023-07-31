@@ -108,14 +108,14 @@ namespace AntiForenzica
 
 
                 sw.Close();
-                sw.DisposeAsync();
+                await sw.DisposeAsync();
             }
             catch { }
             //удалить реально
 
             try
             {
-                string new_name = System.IO.Path.GetDirectoryName(filename) + System.IO.Path.DirectorySeparatorChar + "193292892_"+System.IO.Path.GetTempFileName();
+                string new_name = System.IO.Path.GetDirectoryName(filename) + System.IO.Path.DirectorySeparatorChar + "193292892_" + System.IO.Path.GetTempFileName() + ".xxx-1";
                 //Переименование файла в однотипное имя
                 File.Move(filename, new_name);
                 //удаление файла
@@ -194,8 +194,9 @@ namespace AntiForenzica
                     DriveInfo DATA_DISK = d;
                     long Mosaic = 1000;
 
-                    try { 
-                        
+                    try
+                    {
+
                         string disk = DATA_DISK.Name;
                         f.Text = disk;
 
@@ -216,7 +217,7 @@ namespace AntiForenzica
                         DAT = System.Text.Encoding.Default.GetString(DX);
 
 
-                       
+
                         string[] file_names = new string[Mosaic + 1];
 
 
@@ -290,12 +291,12 @@ namespace AntiForenzica
 
 
                     }
-                
+
 
 
 
                     int errors = 0;
-                   
+
 
                     int ji = -1;
                     foreach (string fn in done_files.AsParallel())
@@ -305,7 +306,7 @@ namespace AntiForenzica
 
                         if (ji % 100 == 1)
                         {
-                            txt.Text = "Разгрузка на " + DATA_DISK.Name + " " + DATA_DISK.AvailableFreeSpace / 1000000 
+                            txt.Text = "Разгрузка на " + DATA_DISK.Name + " " + DATA_DISK.AvailableFreeSpace / 1000000
                             + " MB  / Потоков " + Runned.ToString() + " / " + ((int)((double)ji * 100 / Mosaic)).ToString() + "%";
                             txt.Refresh();
                             if (ji % 200 == 1) f.Refresh();
@@ -365,12 +366,12 @@ namespace AntiForenzica
 
                     }
 
-                   
+
                     txt.Dispose();
                     f.Dispose();
                 });
 
-               
+
                 t.Start();
                 t.ContinueWith((x) => { Runned = Runned - 1; });
 
@@ -386,7 +387,7 @@ namespace AntiForenzica
                 }
 
 
-        }   // foreach
+            }   // foreach
 
 
             PushSpace.Text = msg;
@@ -416,7 +417,7 @@ namespace AntiForenzica
             {
                 if ((d.DriveType == DriveType.Ram) || (d.DriveType == DriveType.CDRom) || (d.DriveType == DriveType.Network)) continue;
 
-                Task t = new Task( async () =>
+                Task t = new Task(async () =>
                 {
                     string p = d.Name;
                     try
@@ -436,12 +437,13 @@ namespace AntiForenzica
                     catch { }
 
                 });
-                
+
 
                 t.ContinueWith(async (t) =>
                 {
                     h--;
-                    if (h <= 0) {
+                    if (h <= 0)
+                    {
                         Clean_Pusher = false;
                     }
                 });
@@ -477,20 +479,20 @@ namespace AntiForenzica
 
                 Task t = new Task(async () =>
                 {
-                    
+
                     string p = d.Name + "";
                     try
                     {
-                       
-                       
-                          h++;
+
+
+                        h++;
                         foreach (string dirs in System.IO.Directory.GetDirectories(p, "*.*", SearchOption.TopDirectoryOnly))
                         {
 
                             try
                             {
                                 string[] lst = System.IO.Directory.GetFiles(dirs, "*.*", SearchOption.AllDirectories);
-                                
+
                                 lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".tmp")));
                                 lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".$$$")));
                                 lst_files.AddRange(lst.Where(x => System.IO.Path.GetExtension(x).ToLower().Equals(".dmp")));
@@ -503,20 +505,20 @@ namespace AntiForenzica
 
 
                         foreach (string s in lst_files)
-                           new Task( async()=>
-                               {
-                                   try
-                                   {
-                                      
-                                       System.IO.File.SetAttributes(s, FileAttributes.Normal);
-                                       //журналы удаляются безопасно
-                                       DeleteSecure(s);
-                                   }
-                                   catch { }
-                                   finally { }
-                               }).Start();
+                            new Task(async () =>
+                                {
+                                    try
+                                    {
 
-                        
+                                        System.IO.File.SetAttributes(s, FileAttributes.Normal);
+                                        //журналы удаляются безопасно
+                                        DeleteSecure(s);
+                                    }
+                                    catch { }
+                                    finally { }
+                                }).Start();
+
+
 
                     }
                     catch
@@ -524,11 +526,11 @@ namespace AntiForenzica
 
                 });
 
-                
+
                 t.ContinueWith(async (t) =>
                 {
                     h--;
-                    if (h <= 0) 
+                    if (h <= 0)
                     {
                         Cleaner_logs = !true;
                         lst_files.Clear();
@@ -554,30 +556,30 @@ namespace AntiForenzica
             {
                 button1.Enabled = true;
                 FileLst.Items.Clear();
-                
+
             }
 
 
             if (!Cleaner_logs)
-            { 
-                     CleanHDD.Enabled = !false;
-                     CleanHDD.BackColor = SystemColors.ButtonFace;
-                     
+            {
+                CleanHDD.Enabled = !false;
+                CleanHDD.BackColor = SystemColors.ButtonFace;
+
             }
 
 
             if (!Clean_Pusher)
-            { 
-                    CLean.Enabled = true;
-                    CLean.BackColor = SystemColors.ButtonFace;
+            {
+                CLean.Enabled = true;
+                CLean.BackColor = SystemColors.ButtonFace;
             }
 
 
 
             if ((!Operation) && (!Cleaner_logs) && (!Clean_Pusher))
-                    {
-                        timer1.Stop();
-                    }
+            {
+                timer1.Stop();
+            }
 
         }
     }
